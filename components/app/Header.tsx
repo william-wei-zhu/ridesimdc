@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Settings, Info, ChevronDown, Check, UserRound } from "lucide-react";
+import { Settings, Info, ChevronDown, Check, UserRound, LayoutGrid } from "lucide-react";
 import { CITIES, cityInk, type City } from "@/lib/cities";
 import { authConfigured } from "@/lib/auth";
 import { useAccount } from "@/components/useAccount";
@@ -66,6 +66,12 @@ function CitySwitcher({ city }: { city: City }) {
               {c.slug === city.slug && <Check className="size-4 text-accent" aria-hidden />}
             </Link>
           ))}
+          {/* Back to the home page, where every city is a button. */}
+          <Link href="/" onClick={() => setOpen(false)}
+            className="mt-1 flex min-h-11 items-center gap-2.5 rounded-xl border-t border-line px-2 text-[0.9rem] font-semibold hover:bg-surface">
+            <LayoutGrid className="size-8 rounded-full bg-surface p-1.5" aria-hidden />
+            <span className="flex-1">All cities</span>
+          </Link>
         </div>
       )}
     </div>

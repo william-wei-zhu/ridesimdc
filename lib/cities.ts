@@ -12,7 +12,7 @@ export interface City {
   short: string;
   /** State or district, for the city picker: "WA". */
   state: string;
-  /** The city's own emoji and color: the city switcher, the dropdown and the home cards wear them. */
+  /** The city's own emoji and color: the city switcher, its dropdown and the home page city buttons wear them. */
   emoji: string;
   color: string;
   live: boolean;
@@ -198,6 +198,14 @@ export const LIVE_CITIES = CITIES.filter((c) => c.live);
 export function cityInk(c: City) {
   const n = parseInt(c.color.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
   return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? "#082b54" : "#ffffff";
+}
+
+/** The live city closest to a point (the visitor's IP location); DC when the point is unknown. */
+export function nearestCity(lat: number, lon: number): City {
+  if (!Number.isFinite(lat) || !Number.isFinite(lon) || (!lat && !lon)) return LIVE_CITIES[0];
+  const k = Math.cos((lat * Math.PI) / 180);
+  const d = (c: City) => ((c.center[0] - lon) * k) ** 2 + (c.center[1] - lat) ** 2;
+  return LIVE_CITIES.reduce((a, b) => (d(b) < d(a) ? b : a));
 }
 
 export function getCity(slug: string | null | undefined): City | undefined {
